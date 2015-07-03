@@ -42,7 +42,7 @@ public class  GenerateAction extends AnAction {
                     try {
                         parser = new XmlParser();
                         Node root = parser.parseText(doc.getText());
-                        Logger.getLogger("ParsedText").info(root.toString());
+                        Logger.getLogger("parsedText").info(root.toString());
                     } catch (ParserConfigurationException | SAXException | IOException e) {
                         e.printStackTrace();
                     }
@@ -50,6 +50,5 @@ public class  GenerateAction extends AnAction {
                 }
             }
         });
-
     }
 }

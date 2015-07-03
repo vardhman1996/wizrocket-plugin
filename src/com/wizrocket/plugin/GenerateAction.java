@@ -43,11 +43,7 @@ public class  GenerateAction extends AnAction {
                         parser = new XmlParser();
                         Node root = parser.parseText(doc.getText());
                         Logger.getLogger("ParsedText").info(root.toString());
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    } catch (SAXException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (ParserConfigurationException | SAXException | IOException e) {
                         e.printStackTrace();
                     }
 

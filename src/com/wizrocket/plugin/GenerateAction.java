@@ -28,6 +28,7 @@ public class  GenerateAction extends AnAction {
 
             @Override
             public void documentChanged(DocumentEvent documentEvent) {
+               Object docSource = documentEvent.getSource();
                 
             }
         });

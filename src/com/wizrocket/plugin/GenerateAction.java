@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.psi.PsiFile;
 import groovy.util.Node;
 import groovy.util.XmlParser;
 import org.xml.sax.SAXException;

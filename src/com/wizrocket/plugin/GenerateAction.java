@@ -16,6 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,6 +35,7 @@ public class  GenerateAction extends AnAction {
 
 
     public void actionPerformed(AnActionEvent event) {
+        HashSet<String> usesSet = new HashSet<>();
         List tags;
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -56,18 +58,25 @@ public class  GenerateAction extends AnAction {
 
             NodeList usesPermList = docElm.getElementsByTagName("uses-permission");
             if(usesPermList == null || usesPermList.getLength() < 1) return;
-            Node usesItem = usesPermList.item(0);
-            NamedNodeMap usesMap = usesItem.getAttributes();
-            if(usesMap.getNamedItem("android:name").toString().contains("\"android.permission.READ_PHONE_STATE\"")) {
-                logger.info("Contains uses perm 1");
+
+            for(int i = 0; i < usesPermList.getLength(); i++) {
+                Node tempUsesItem = usesPermList.item(i);
+                NamedNodeMap usesMap = tempUsesItem.getAttributes();
+                usesSet.add(usesMap.getNamedItem("android:name").toString());
             }
 
+            logger.info("Set = " + usesSet.toString());
+
+            if(usesSet.contains("android:name=\"android.permission.READ_PHONE_STATE\"") && usesSet.contains("android:name=\"android.permission.INTERNET\"")) {
+                logger.info("Contains required uses permissions");
+            }
+            
 
             NodeList applicationList = docElm.getElementsByTagName("application");
             if(applicationList == null || applicationList.getLength() != 1) return;
             Node appItem = applicationList.item(0);
             NamedNodeMap attributesMap = appItem.getAttributes();
-            if(attributesMap.getNamedItem("android:name")!= null && attributesMap.getNamedItem("android:name").toString().contains("\"com.wizrocket.android.sdk.Application\"")) {
+            if(attributesMap.getNamedItem("android:name")!= null && attributesMap.getNamedItem("android:name").toString().equals("android:name=\"com.wizrocket.android.sdk.Application\"")) {
                 logger.info("Android name recognized");
             } else {
                 logger.info("Android name missing");

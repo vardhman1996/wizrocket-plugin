@@ -105,14 +105,14 @@ public class GenerateAction extends AnAction {
         }
     }
 
-//    private void validateRequiredMeta(NodeList children) {
-//        int length = children.getLength();
-//        for (int i =0; i<length; i++) {
-//            Node item = children.item(i);
-//            if (!item.getNodeName().equals("meta-data")) continue;
-//            NamedNodeMap metaAttr = item.getAttributes();
-//
-//
-//        }
-//    }
+    private void validateRequiredMeta(NodeList children) {
+        int length = children.getLength();
+        for (int i =0; i<length; i++) {
+            Node item = children.item(i);
+            if (!item.getNodeName().equals("meta-data")) continue;
+            NamedNodeMap metaAttr = item.getAttributes();
+
+
+        }
+    }
 }

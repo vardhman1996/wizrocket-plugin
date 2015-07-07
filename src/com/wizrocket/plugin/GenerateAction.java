@@ -65,12 +65,10 @@ public class  GenerateAction extends AnAction {
                 usesSet.add(usesMap.getNamedItem("android:name").toString());
             }
 
-            logger.info("Set = " + usesSet.toString());
-
             if(usesSet.contains("android:name=\"android.permission.READ_PHONE_STATE\"") && usesSet.contains("android:name=\"android.permission.INTERNET\"")) {
                 logger.info("Contains required uses permissions");
             }
-            
+
 
             NodeList applicationList = docElm.getElementsByTagName("application");
             if(applicationList == null || applicationList.getLength() != 1) return;
@@ -84,38 +82,6 @@ public class  GenerateAction extends AnAction {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-//        DocumentProvider document = new DocumentProvider(editor);
-//        final Document doc = document.getDoc();
-//
-//
-//
-//        doc.addDocumentListener(new DocumentListener() {
-//            @Override
-//            public void beforeDocumentChange(DocumentEvent documentEvent) {
-//
-//            }
-//
-//            @Override
-//            public void documentChanged(DocumentEvent documentEvent) {
-//                Logger.getLogger("docSource").info(currentFile.getName());
-//                if(currentFile.getName().equals("AndroidManifest.xml")) {
-//                    XmlParser parser;
-//                    try {
-//                        parser = new XmlParser();
-//                        Node root = parser.parseText(doc.getText());
-//                        NodeList apps = (NodeList) root.get("application");
-//                        logger.info("apps: " + apps);
-//                        Node application = (Node) apps.get(0);
-//                        logger.info("app: " + application.toString());
-//                        Object attribute = application.attribute("android\\:allowBackup");
-//                        logger.info("Android appliation class: " + attribute);
-//                        Logger.getLogger("parsedText").info(root.toString());
-//                    } catch (ParserConfigurationException | SAXException | IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            }
-//        });
+
     }
 }

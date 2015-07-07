@@ -59,7 +59,18 @@ public class  GenerateAction extends AnAction {
             InputSource is = new InputSource(new StringReader(editor.getDocument().getText()));
             dom = db.parse(is);
             Element docElm = dom.getDocumentElement();
+            logger.info("Element = " + docElm.getAttribute("package"));
+
             
+            NodeList applicationList = docElm.getElementsByTagName("application");
+            if(applicationList == null || applicationList.getLength() != 1) return;
+            Node appItem = applicationList.item(0);
+            NamedNodeMap attributesMap = appItem.getAttributes();
+            if(attributesMap.getNamedItem("android:name")!= null && attributesMap.getNamedItem("android:name").toString().contains("\"com.wizrocket.android.sdk.Application\"")) {
+                logger.info("Android name recognized");
+            } else {
+                logger.info("Android name missing");
+            }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }

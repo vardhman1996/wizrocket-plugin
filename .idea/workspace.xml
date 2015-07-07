@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1605e65-ab4c-4d53-82a5-67f5cae6dea4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wizrocket-plugin/com/wizrocket/plugin/GenerateAction$1.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wizrocket-plugin/com/wizrocket/plugin/GenerateAction.class" afterPath="$PROJECT_DIR$/out/production/wizrocket-plugin/com/wizrocket/plugin/GenerateAction.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java" afterPath="$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/META-INF/plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="wizrocket-plugin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -42,8 +38,8 @@
       <file leaf-file-name="GenerateAction.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2027027">
-              <caret line="61" column="12" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.2837838">
+              <caret line="63" column="12" selection-start-line="63" selection-start-column="12" selection-end-line="63" selection-end-column="12" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -679,8 +675,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2027027">
-          <caret line="61" column="12" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.2837838">
+          <caret line="63" column="12" selection-start-line="63" selection-start-column="12" selection-end-line="63" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

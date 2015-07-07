@@ -61,7 +61,15 @@ public class  GenerateAction extends AnAction {
             Element docElm = dom.getDocumentElement();
             logger.info("Element = " + docElm.getAttribute("package"));
 
-            
+            NodeList usesPermList = docElm.getElementsByTagName("uses-permission");
+            if(usesPermList == null || usesPermList.getLength() < 1) return;
+            Node usesItem = usesPermList.item(0);
+            NamedNodeMap usesMap = usesItem.getAttributes();
+            if(usesMap.getNamedItem("android:name").toString().contains("\"android.permission.READ_PHONE_STATE\"")) {
+                logger.info("Contains uses perm 1");
+            }
+
+
             NodeList applicationList = docElm.getElementsByTagName("application");
             if(applicationList == null || applicationList.getLength() != 1) return;
             Node appItem = applicationList.item(0);

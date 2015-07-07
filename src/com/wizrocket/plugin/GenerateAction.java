@@ -19,23 +19,26 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-//import org.w3c.dom.Node;
 
 /**
  * Created by VardhmanMehta on 03/07/15.
  */
-public class  GenerateAction extends AnAction {
+public class GenerateAction extends AnAction {
 
-    private static Logger logger  = Logger.getLogger("WizRocket");
-    public GenerateAction () {
+    private static Pattern p = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)-(\\w\\w\\w\\w)$");
+    private HashSet<String> usesSet = new HashSet<>();
+    private static Logger logger = Logger.getLogger("WizRocket");
+
+    public GenerateAction() {
         super();
     }
 
 
-
     public void actionPerformed(AnActionEvent event) {
-        HashSet<String> usesSet = new HashSet<>();
+
         List tags;
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -44,7 +47,7 @@ public class  GenerateAction extends AnAction {
         Editor editor = DataKeys.EDITOR.getData(event.getDataContext());
 
         //Logger.getLogger("Get Name").info(currentFile.getPath());
-        if(psiFile == null || editor == null) {
+        if (psiFile == null || editor == null) {
             event.getPresentation().setEnabled(false);
             return;
         }
@@ -54,34 +57,62 @@ public class  GenerateAction extends AnAction {
             InputSource is = new InputSource(new StringReader(editor.getDocument().getText()));
             dom = db.parse(is);
             Element docElm = dom.getDocumentElement();
-            logger.info("Element = " + docElm.getAttribute("package"));
+
+            //logger.info("Element = " + docElm.getAttribute("package"));
 
             NodeList usesPermList = docElm.getElementsByTagName("uses-permission");
-            if(usesPermList == null || usesPermList.getLength() < 1) return;
+            if (usesPermList == null || usesPermList.getLength() < 1) return;
 
-            for(int i = 0; i < usesPermList.getLength(); i++) {
-                Node tempUsesItem = usesPermList.item(i);
-                NamedNodeMap usesMap = tempUsesItem.getAttributes();
-                usesSet.add(usesMap.getNamedItem("android:name").toString());
-            }
-
-            if(usesSet.contains("android:name=\"android.permission.READ_PHONE_STATE\"") && usesSet.contains("android:name=\"android.permission.INTERNET\"")) {
-                logger.info("Contains required uses permissions");
-            }
+            validateUsesPermissions(usesPermList);
 
 
             NodeList applicationList = docElm.getElementsByTagName("application");
-            if(applicationList == null || applicationList.getLength() != 1) return;
-            Node appItem = applicationList.item(0);
-            NamedNodeMap attributesMap = appItem.getAttributes();
-            if(attributesMap.getNamedItem("android:name")!= null && attributesMap.getNamedItem("android:name").toString().equals("android:name=\"com.wizrocket.android.sdk.Application\"")) {
-                logger.info("Android name recognized");
-            } else {
-                logger.info("Android name missing");
-            }
+            if (applicationList == null || applicationList.getLength() != 1) return;
+            Node applicationNode = applicationList.item(0);
+
+
+            validateAndroidName(applicationNode);
+
+            NodeList children = applicationNode.getChildNodes();
+
+
+            validateRequiredMeta(children);
+
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
     }
+
+    private void validateAndroidName(Node applicationNode) {
+        NamedNodeMap attributesMap = applicationNode.getAttributes();
+        if (attributesMap.getNamedItem("android:name") != null && attributesMap.getNamedItem("android:name").toString().equals("android:name=\"com.wizrocket.android.sdk.Application\"")) {
+            logger.info("Android name recognized");
+        } else {
+            logger.info("Android name missing");
+        }
+    }
+
+    private void validateUsesPermissions(NodeList usesPermList) {
+        for (int i = 0; i < usesPermList.getLength(); i++) {
+            Node tempUsesItem = usesPermList.item(i);
+            NamedNodeMap usesMap = tempUsesItem.getAttributes();
+            usesSet.add(usesMap.getNamedItem("android:name").toString());
+        }
+
+        if (usesSet.contains("android:name=\"android.permission.READ_PHONE_STATE\"") && usesSet.contains("android:name=\"android.permission.INTERNET\"")) {
+            logger.info("Contains required uses permissions");
+        }
+    }
+
+//    private void validateRequiredMeta(NodeList children) {
+//        int length = children.getLength();
+//        for (int i =0; i<length; i++) {
+//            Node item = children.item(i);
+//            if (!item.getNodeName().equals("meta-data")) continue;
+//            NamedNodeMap metaAttr = item.getAttributes();
+//
+//
+//        }
+//    }
 }

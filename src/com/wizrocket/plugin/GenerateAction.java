@@ -32,6 +32,7 @@ public class GenerateAction extends AnAction {
     private static Pattern accountToken = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)$");
     private HashSet<String> usesSet = new HashSet<>();
     private static Logger logger = Logger.getLogger("WizRocket");
+    private String userPackage;
 
     public GenerateAction() {
         super();
@@ -58,12 +59,15 @@ public class GenerateAction extends AnAction {
             dom = db.parse(is);
             Element docElm = dom.getDocumentElement();
 
+            userPackage = docElm.getAttribute("package");
+
             //logger.info("Element = " + docElm.getAttribute("package"));
 
             NodeList usesPermList = docElm.getElementsByTagName("uses-permission");
+            NodeList gcmPermList = docElm.getElementsByTagName("permission");
             if (usesPermList == null || usesPermList.getLength() < 1) return;
 
-            validateUsesPermissions(usesPermList);
+            validateUsesPermissions(usesPermList, gcmPermList);
 
             NodeList applicationList = docElm.getElementsByTagName("application");
             if (applicationList == null || applicationList.getLength() != 1) return;
@@ -77,11 +81,13 @@ public class GenerateAction extends AnAction {
 
             validateRequiredReceiver(children);
 
+
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
     }
+
 
     private void validateAndroidName(Node applicationNode) {
         NamedNodeMap attributesMap = applicationNode.getAttributes();
@@ -92,12 +98,22 @@ public class GenerateAction extends AnAction {
         }
     }
 
-    private void validateUsesPermissions(NodeList usesPermList) {
+    private void validateUsesPermissions(NodeList usesPermList, NodeList gcmPermList) {
         for (int i = 0; i < usesPermList.getLength(); i++) {
             Node tempUsesItem = usesPermList.item(i);
             NamedNodeMap usesMap = tempUsesItem.getAttributes();
             usesSet.add(usesMap.getNamedItem("android:name").getNodeValue());
         }
+
+        for (int i = 0; i < gcmPermList.getLength(); i++) {
+            Node tempGcmPermItem = gcmPermList.item(i);
+            NamedNodeMap gcmPermMap = tempGcmPermItem.getAttributes();
+            usesSet.add(gcmPermMap.getNamedItem("android:name").getNodeValue());
+            usesSet.add(gcmPermMap.getNamedItem("android:protectionLevel").getNodeValue());
+        }
+
+        logger.info(usesSet.toString());
+
         if (usesSet.contains("android.permission.READ_PHONE_STATE") && usesSet.contains("android.permission.INTERNET")) {
             logger.info("Contains required uses permissions");
         } else {
@@ -105,6 +121,14 @@ public class GenerateAction extends AnAction {
         }
         if(!usesSet.contains("android.permission.ACCESS_NETWORK_STATE")||!usesSet.contains("android.permission.GET_ACCOUNTS")||!usesSet.contains("android.permission.ACCESS_COARSE_LOCATION")||!usesSet.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
             logger.info("Does not contain recommended uses permissions");
+        } else {
+            logger.info("Does contain recommended uses permissions");
+        }
+
+        if(usesSet.contains("signature") && usesSet.contains(userPackage + ".permission.C2D_MESSAGE") && usesSet.contains("com.google.android.c2dm.permission.RECEIVE")) {
+            logger.info("GCM uses permissions configured correctly");
+        } else {
+            logger.info("GCM uses permissions not used yet");
         }
     }
 
@@ -171,4 +195,5 @@ public class GenerateAction extends AnAction {
             }
         }
     }
+
 }

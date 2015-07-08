@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
  */
 public class GenerateAction extends AnAction {
 
-    private static Pattern p = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)-(\\w\\w\\w\\w)$");
+    private static Pattern accoundID = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)-(\\w\\w\\w\\w)$");
+    private static Pattern accountToken = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)$");
     private HashSet<String> usesSet = new HashSet<>();
     private static Logger logger = Logger.getLogger("WizRocket");
 
@@ -65,18 +66,17 @@ public class GenerateAction extends AnAction {
 
             validateUsesPermissions(usesPermList);
 
-
             NodeList applicationList = docElm.getElementsByTagName("application");
             if (applicationList == null || applicationList.getLength() != 1) return;
             Node applicationNode = applicationList.item(0);
-
 
             validateAndroidName(applicationNode);
 
             NodeList children = applicationNode.getChildNodes();
 
-
             validateRequiredMeta(children);
+
+            validateRequiredReceiver(children);
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
@@ -84,9 +84,11 @@ public class GenerateAction extends AnAction {
 
     }
 
+
+
     private void validateAndroidName(Node applicationNode) {
         NamedNodeMap attributesMap = applicationNode.getAttributes();
-        if (attributesMap.getNamedItem("android:name") != null && attributesMap.getNamedItem("android:name").toString().equals("android:name=\"com.wizrocket.android.sdk.Application\"")) {
+        if (attributesMap.getNamedItem("android:name") != null && attributesMap.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.Application")) {
             logger.info("Android name recognized");
         } else {
             logger.info("Android name missing");
@@ -97,22 +99,58 @@ public class GenerateAction extends AnAction {
         for (int i = 0; i < usesPermList.getLength(); i++) {
             Node tempUsesItem = usesPermList.item(i);
             NamedNodeMap usesMap = tempUsesItem.getAttributes();
-            usesSet.add(usesMap.getNamedItem("android:name").toString());
+            usesSet.add(usesMap.getNamedItem("android:name").getNodeValue());
         }
-
-        if (usesSet.contains("android:name=\"android.permission.READ_PHONE_STATE\"") && usesSet.contains("android:name=\"android.permission.INTERNET\"")) {
+        if (usesSet.contains("android.permission.READ_PHONE_STATE") && usesSet.contains("android.permission.INTERNET")) {
             logger.info("Contains required uses permissions");
+        } else {
+            logger.info("Does not contain required uses permissions");
+        }
+        if(!usesSet.contains("android.permission.ACCESS_NETWORK_STATE")||!usesSet.contains("android.permission.GET_ACCOUNTS")||!usesSet.contains("android.permission.ACCESS_COARSE_LOCATION")||!usesSet.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+            logger.info("Does not contain recommended uses permissions");
         }
     }
 
     private void validateRequiredMeta(NodeList children) {
         int length = children.getLength();
-        for (int i =0; i<length; i++) {
+        for (int i = 0; i<length; i++) {
             Node item = children.item(i);
+            Matcher m;
             if (!item.getNodeName().equals("meta-data")) continue;
             NamedNodeMap metaAttr = item.getAttributes();
 
+            if(metaAttr.getNamedItem("android:name").getNodeValue().equals("WIZROCKET_ACCOUNT_ID")) {
+                m = accoundID.matcher(metaAttr.getNamedItem("android:value").getNodeValue());
+                if(m.find()) {
+                    logger.info("Correct format of Account ID");
+                } else {
+                    logger.info("Account ID not in the correct format");
+                }
+            }
 
+            if(metaAttr.getNamedItem("android:name").getNodeValue().equals("WIZROCKET_TOKEN")) {
+                m = accountToken.matcher(metaAttr.getNamedItem("android:value").getNodeValue());
+                if(m.find()) {
+                    logger.info("Correct format of Account Token");
+                } else {
+                    logger.info("Account Token not in the correct format");
+                }
+            }
+        }
+    }
+
+    private void validateRequiredReceiver(NodeList children) {
+        int length = children.getLength();
+        for(int i = 0; i<length; i++) {
+            Node item = children.item(i);
+            Matcher m;
+            if(!item.getNodeName().equals("receiver")) continue;
+
+            NamedNodeMap receiverAttr = item.getAttributes();
+
+            if(receiverAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InstallReferrerBroadcastReceiver") && receiverAttr.getNamedItem("android:exported").getNodeValue().equals("true")) {
+                logger.info("Receiver configured correctly");
+            }
         }
     }
 }

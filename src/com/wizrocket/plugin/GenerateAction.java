@@ -283,18 +283,5 @@ public class GenerateAction extends AnAction {
             }
         }
     }
-
-//    private Node matchNodes (Node rootNode, Map<String, String> attributes, String nodeName) {
-//        NodeList childNodes = rootNode.getChildNodes();
-//        int length = childNodes.getLength();
-//        for(int i = 0; i < length; i++) {
-//            Node item = childNodes.item(i);
-//            NamedNodeMap itemMap = item.getAttributes();
-//            if(item.getNodeName().equals(nodeName)) {
-//                return item;
-//            }
-//        }
-//        return null;
-//    }
 }
 

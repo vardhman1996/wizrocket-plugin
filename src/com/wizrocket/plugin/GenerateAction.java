@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +59,6 @@ public class GenerateAction extends AnAction {
             InputSource is = new InputSource(new StringReader(editor.getDocument().getText()));
             dom = db.parse(is);
             Element docElm = dom.getDocumentElement();
-
             userPackage = docElm.getAttribute("package");
 
             //logger.info("Element = " + docElm.getAttribute("package"));
@@ -119,7 +119,11 @@ public class GenerateAction extends AnAction {
         } else {
             logger.info("Does not contain required uses permissions");
         }
-        if(!usesSet.contains("android.permission.ACCESS_NETWORK_STATE")||!usesSet.contains("android.permission.GET_ACCOUNTS")||!usesSet.contains("android.permission.ACCESS_COARSE_LOCATION")||!usesSet.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+        if(!usesSet.contains("android.permission.ACCESS_NETWORK_STATE")||
+            !usesSet.contains("android.permission.GET_ACCOUNTS")||
+            !usesSet.contains("android.permission.ACCESS_COARSE_LOCATION")||
+            !usesSet.contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+
             logger.info("Does not contain recommended uses permissions");
         } else {
             logger.info("Does contain recommended uses permissions");
@@ -196,4 +200,16 @@ public class GenerateAction extends AnAction {
         }
     }
 
+    private Node matchNodes (Node rootNode, Map<String, String> attributes, String nodeName) {
+        NodeList childNodes = rootNode.getChildNodes();
+        int length = childNodes.getLength();
+        for(int i = 0; i < length; i++) {
+            Node item = childNodes.item(i);
+            NamedNodeMap itemMap = item.getAttributes();
+            if(item.getNodeName().equals(nodeName)) {
+                return item;
+            }
+        }
+        return null;
+    }
 }

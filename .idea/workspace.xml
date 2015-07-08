@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a1605e65-ab4c-4d53-82a5-67f5cae6dea4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java" afterPath="$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java" />
-    </list>
+    <list default="true" id="a1605e65-ab4c-4d53-82a5-67f5cae6dea4" name="Default" comment="" />
     <ignored path="wizrocket-plugin.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,8 +36,8 @@
       <file leaf-file-name="GenerateAction.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.72727275">
-              <caret line="285" column="17" selection-start-line="285" selection-start-column="17" selection-end-line="285" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.76623374">
+              <caret line="291" column="0" selection-start-line="291" selection-start-column="0" selection-end-line="291" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -697,8 +695,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/wizrocket/plugin/GenerateAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.72727275">
-          <caret line="285" column="17" selection-start-line="285" selection-start-column="17" selection-end-line="285" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.76623374">
+          <caret line="291" column="0" selection-start-line="291" selection-start-column="0" selection-end-line="291" selection-end-column="0" />
           <folding />
         </state>
       </provider>

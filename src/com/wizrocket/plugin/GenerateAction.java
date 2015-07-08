@@ -17,8 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -200,16 +198,18 @@ public class GenerateAction extends AnAction {
         }
     }
 
-    private Node matchNodes (Node rootNode, Map<String, String> attributes, String nodeName) {
-        NodeList childNodes = rootNode.getChildNodes();
-        int length = childNodes.getLength();
-        for(int i = 0; i < length; i++) {
-            Node item = childNodes.item(i);
-            NamedNodeMap itemMap = item.getAttributes();
-            if(item.getNodeName().equals(nodeName)) {
-                return item;
-            }
-        }
-        return null;
-    }
+
+
+//    private Node matchNodes (Node rootNode, Map<String, String> attributes, String nodeName) {
+//        NodeList childNodes = rootNode.getChildNodes();
+//        int length = childNodes.getLength();
+//        for(int i = 0; i < length; i++) {
+//            Node item = childNodes.item(i);
+//            NamedNodeMap itemMap = item.getAttributes();
+//            if(item.getNodeName().equals(nodeName)) {
+//                return item;
+//            }
+//        }
+//        return null;
+//    }
 }

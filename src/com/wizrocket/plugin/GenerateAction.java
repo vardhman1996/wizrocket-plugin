@@ -40,7 +40,6 @@ public class GenerateAction extends AnAction {
 
     public void actionPerformed(AnActionEvent event) {
 
-        List tags;
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
@@ -83,8 +82,6 @@ public class GenerateAction extends AnAction {
         }
 
     }
-
-
 
     private void validateAndroidName(Node applicationNode) {
         NamedNodeMap attributesMap = applicationNode.getAttributes();
@@ -141,15 +138,36 @@ public class GenerateAction extends AnAction {
 
     private void validateRequiredReceiver(NodeList children) {
         int length = children.getLength();
-        for(int i = 0; i<length; i++) {
+        for(int i = 0; i < length; i++) {
             Node item = children.item(i);
-            Matcher m;
             if(!item.getNodeName().equals("receiver")) continue;
 
             NamedNodeMap receiverAttr = item.getAttributes();
 
             if(receiverAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InstallReferrerBroadcastReceiver") && receiverAttr.getNamedItem("android:exported").getNodeValue().equals("true")) {
                 logger.info("Receiver configured correctly");
+            } else {
+                logger.info("Receiver configured incorrectly");
+            }
+
+            NodeList receiverChildren = item.getChildNodes();
+            int newLength = receiverChildren.getLength();
+            for(int j = 0; j < newLength; j++) {
+                Node childrenItem = receiverChildren.item(j);
+                if(!childrenItem.getNodeName().equals("intent-filter")) continue;
+                NodeList intentChildren = childrenItem.getChildNodes();
+                int size = intentChildren.getLength();
+                for(int k = 0; k < size; k++) {
+                    Node childrenItem2 = intentChildren.item(k);
+                    if(!childrenItem2.getNodeName().equals("action")) continue;
+                    NamedNodeMap actionAttr = childrenItem2.getAttributes();
+
+                    if(actionAttr.getNamedItem("android:name").getNodeValue().equals("com.android.vending.INSTALL_REFERRER")) {
+                        logger.info("Correct action class for receiver");
+                    } else {
+                        logger.info("Incorrect action class for receiver");
+                    }
+                }
             }
         }
     }

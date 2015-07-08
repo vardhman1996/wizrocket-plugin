@@ -41,9 +41,7 @@
     <action id="generatePlugin" class="com.wizrocket.plugin.GenerateAction" text="plugin">
       <add-to-group group-id="GenerateGroup" anchor="first"/>
     </action>
-    <action id="test" class="com.wizrocket.plugin.test" text="test" description="test">
-      <add-to-group group-id="MainToolBar" anchor="first"/>
-    </action>
+
   </actions>
 
 </idea-plugin>

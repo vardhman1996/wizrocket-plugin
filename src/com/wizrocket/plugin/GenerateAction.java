@@ -276,10 +276,14 @@ public class GenerateAction extends AnAction {
             if (!item.getNodeName().equals("activity")) continue;
 
             NamedNodeMap actionAttr = item.getAttributes();
-            if(actionAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InAppNotificationActivity") && actionAttr.getNamedItem("android:theme").getNodeValue().equals("@android:style/Theme.Translucent.NoTitleBar") && actionAttr.getNamedItem("android:configChanges").getNodeValue().equals("orientation|keyboardHidden")) {
-                logger.info("In-App notifications configured correctly");
-            } else {
-                logger.info("In-App notifications configured incorrectly");
+            if(actionAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InAppNotificationActivity")) {
+                if( actionAttr.getNamedItem("android:theme").getNodeValue().equals("@android:style/Theme.Translucent.NoTitleBar")
+                    && actionAttr.getNamedItem("android:configChanges").getNodeValue().equals("orientation|keyboardHidden")) {
+
+                    logger.info("In-App notifications configured correctly");
+                } else {
+                    logger.info("In-App notifications configured incorrectly");
+                }
             }
         }
     }

@@ -79,13 +79,14 @@ public class GenerateAction extends AnAction {
 
             validateRequiredReceiver(children);
 
+            validateGcmReceiver(children);
+
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
     }
-
 
     private void validateAndroidName(Node applicationNode) {
         NamedNodeMap attributesMap = applicationNode.getAttributes();
@@ -135,6 +136,8 @@ public class GenerateAction extends AnAction {
     }
 
     private void validateRequiredMeta(NodeList children) {
+        boolean one = false;
+        boolean two = false;
         int length = children.getLength();
         for (int i = 0; i<length; i++) {
             Node item = children.item(i);
@@ -159,6 +162,24 @@ public class GenerateAction extends AnAction {
                     logger.info("Account Token not in the correct format");
                 }
             }
+
+            if(metaAttr.getNamedItem("android:name").getNodeValue().equals("GCM_SENDER_ID")) {
+                String namedItem = metaAttr.getNamedItem("android:value").getNodeValue();
+                if(namedItem.startsWith("id:")) {
+                    logger.info("GCM ID configured correctly");
+                } else {
+                    logger.info("GCM ID configured incorrectly");
+                }
+            }
+
+            if(metaAttr.getNamedItem("android:name").getNodeValue().equals("com.google.android.gms.version")) {
+                if(metaAttr.getNamedItem("android:value").getNodeValue().equals("@integer/google_play_services_version")) {
+                    logger.info("Meta Data name and value set correctly for GCM");
+                } else {
+                    logger.info("Meta Data name and value set incorrectly for GCM");
+                }
+            }
+
         }
     }
 
@@ -170,10 +191,12 @@ public class GenerateAction extends AnAction {
 
             NamedNodeMap receiverAttr = item.getAttributes();
 
-            if(receiverAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InstallReferrerBroadcastReceiver") && receiverAttr.getNamedItem("android:exported").getNodeValue().equals("true")) {
-                logger.info("Receiver configured correctly");
-            } else {
-                logger.info("Receiver configured incorrectly");
+            if(receiverAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.InstallReferrerBroadcastReceiver")) {
+                if(receiverAttr.getNamedItem("android:exported").getNodeValue().equals("true")) {
+                    logger.info("Receiver configured correctly");
+                }  else {
+                    logger.info("Receiver configured incorrectly");
+                }
             }
 
             NodeList receiverChildren = item.getChildNodes();
@@ -190,15 +213,53 @@ public class GenerateAction extends AnAction {
 
                     if(actionAttr.getNamedItem("android:name").getNodeValue().equals("com.android.vending.INSTALL_REFERRER")) {
                         logger.info("Correct action class for receiver");
-                    } else {
-                        logger.info("Incorrect action class for receiver");
                     }
                 }
             }
         }
     }
 
+    private void validateGcmReceiver(NodeList children) {
+        int length = children.getLength();
+        for(int i = 0; i < length; i++) {
+            Node item = children.item(i);
+            if(!item.getNodeName().equals("receiver")) continue;
 
+            NamedNodeMap receiverAttr = item.getAttributes();
+
+            if(receiverAttr.getNamedItem("android:name").getNodeValue().equals("com.wizrocket.android.sdk.GcmBroadcastReceiver")) {
+                if(receiverAttr.getNamedItem("android:permission").getNodeValue().equals("com.google.android.c2dm.permission.SEND")) {
+                    logger.info("GCM Receiver configured correctly");
+                } else {
+                    logger.info("GCM Receiver configured incorrectly");
+                }
+            }
+
+            NodeList gcmRecChildren = item.getChildNodes();
+            int newLength = gcmRecChildren.getLength();
+            for(int j = 0; j < newLength; j++) {
+                Node childrenItem = gcmRecChildren.item(j);
+                if(!childrenItem.getNodeName().equals("intent-filter")) continue;
+                NodeList intentChildren = childrenItem.getChildNodes();
+                int size = intentChildren.getLength();
+                //logger.info(""+size);
+                for(int k = 0; k < size; k++) {
+                    //logger.info("reached here");
+                    Node childrenItem2 = intentChildren.item(k);
+                    if(!(childrenItem2.getNodeName().equals("action")
+                        || childrenItem2.getNodeName().equals("category"))) continue;
+
+                    NamedNodeMap attrMap = childrenItem2.getAttributes();
+
+                    if(attrMap.getNamedItem("android:name").getNodeValue().equals("com.google.android.c2dm.intent.RECEIVE") ||
+                            attrMap.getNamedItem("android:name").getNodeName().equals("com.google.android.c2dm.intent.REGISTRATION") ||
+                            attrMap.getNamedItem("android:name").getNodeName().equals(userPackage)) {
+                        logger.info("Correct action and category tags configured");
+                    }
+                }
+            }
+        }
+    }
 
 //    private Node matchNodes (Node rootNode, Map<String, String> attributes, String nodeName) {
 //        NodeList childNodes = rootNode.getChildNodes();

@@ -39,9 +39,13 @@
   <actions>
     <!-- Add your actions here -->
     <action id="generatePlugin" class="com.wizrocket.plugin.GenerateAction" text="plugin">
-      <add-to-group group-id="GenerateGroup" anchor="first"/>
+      <add-to-group group-id="MainMenu" anchor="last"/>
     </action>
-
+    <group id="MyPlugin.SampleMenu" text="_Plugin" description="Plugin">
+      <add-to-group group-id="MainMenu" anchor="last"  />
+      <action id="Myplugin.Textboxes" class="com.wizrocket.plugin.GenerateAction" text="Validate _Boxes" description="A test menu item" />
+      <!--<action id="Myplugin.Dialogs" class="Mypackage.MyShowDialog" text="Show _Dialog" description="A test menu item" />-->
+    </group>
   </actions>
 
 </idea-plugin>

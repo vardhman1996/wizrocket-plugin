@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Created by VardhmanMehta on 03/07/15.
  */
-public class GenerateAction extends AnAction {
+ public class GenerateAction extends AnAction {
 
     private static Pattern accoundID = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)-(\\w\\w\\w\\w)$");
     private static Pattern accountToken = Pattern.compile("^(\\w\\w\\w)-(\\w\\w\\w)$");
@@ -33,7 +33,7 @@ public class GenerateAction extends AnAction {
     private static Logger logger = Logger.getLogger("WizRocket");
     private String userPackage;
 
-    public GenerateAction() {
+   public GenerateAction() {
         super();
     }
 
@@ -87,7 +87,7 @@ public class GenerateAction extends AnAction {
             e.printStackTrace();
         }
 
-    }
+   }
 
     private void validateAndroidName(Node applicationNode) {
         NamedNodeMap attributesMap = applicationNode.getAttributes();
@@ -137,8 +137,6 @@ public class GenerateAction extends AnAction {
     }
 
     private void validateRequiredMeta(NodeList children) {
-        boolean one = false;
-        boolean two = false;
         int length = children.getLength();
         for (int i = 0; i < length; i++) {
             Node item = children.item(i);

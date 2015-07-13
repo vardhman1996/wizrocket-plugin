@@ -71,6 +71,7 @@ import java.util.regex.Pattern;
             if (applicationList == null || applicationList.getLength() != 1) return;
             Node applicationNode = applicationList.item(0);
 
+
             validateAndroidName(applicationNode);
 
             NodeList children = applicationNode.getChildNodes();
